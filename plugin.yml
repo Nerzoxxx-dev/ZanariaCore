@@ -1,0 +1,5 @@
+name: ZanariaCore
+api: 4.0.0
+main: ZanariaCore\Core
+version: 1.0
+author: Nerzox
