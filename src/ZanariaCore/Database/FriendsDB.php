@@ -13,7 +13,7 @@ class FriendsDB {
     public static function init(): void {
         $db = self::getDB();
 
-        $db->query("CREATE TABLE IF NOT EXISTS friends(author_id INTEGER, target_id INTEGER, is_pending BOOLEAN)");
+        $db->query("CREATE TABLE IF NOT EXISTS friends(author_id TEXT, target_id TEXT, is_pending BOOLEAN)");
     }
 
     public static function getAllDatas(): ?array {
@@ -47,7 +47,7 @@ class FriendsDB {
         $db = self::getDB();
 
         $req = $db->query("SELECT * FROM friends WHERE target_id='$id' AND is_pending=1");
-        $arr = $req->fetch_array();
+        $arr = $req->fetch_all();
 
         return is_null($arr) ? [] : $arr;
     }
@@ -68,5 +68,17 @@ class FriendsDB {
         $arr = $req->fetch_array();
 
         return is_null($arr) ? [] : $arr;
+    }
+
+    public static function sendDemand($id1, $id2){
+        $db = self::getDB();
+
+        $db->query("INSERT INTO friends(author_id, target_id, is_pending) VALUES('$id1', '$id2', 1)");
+    }
+
+    public static function acceptDemand($target_id, $author_id) {
+        $db = self::getDB();
+
+        $db->query("UPDATE friends SET is_pending=0 WHERE target_id='$target_id' AND author_id='$author_id");
     }
 }
